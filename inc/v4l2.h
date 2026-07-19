@@ -1,0 +1,30 @@
+#ifndef	_V4L2_H
+#define _V4L2_H
+#include<linux/videodev2.h>
+#include<head.h>
+
+#define BUF_NUM 4
+typedef struct 
+{
+    unsigned int pixelformat;
+    char description[32];
+}capfmt;
+typedef struct 
+{
+    int width;
+    int height;
+}fs;
+typedef struct
+{
+    int numerator;
+    int denominator;
+}fi;
+int capability(int fd);
+int select_v4l2(int fd,capfmt *fmt_li, fs *fs_li, fi *fi_li);
+int set_fmt(int fd,capfmt *fmt_li, fs *fs_li);
+int set_streamparm(int fd, fi *fi_li);
+int dma_bufs_qbuf(int fd, DmaBuffer *dma_bufs);
+int dqbuf(int fd, DmaBuffer *dma_bufs);
+
+
+#endif
