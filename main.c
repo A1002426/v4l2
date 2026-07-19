@@ -45,7 +45,7 @@ int main(int argc, char **argv)
         return 1;
     }
     
-    if (!dma_bufs_qbuf(fd, dma_bufs))
+    if (!qbuf(fd, dma_bufs))
     {
         close(fd);
         return 1;
@@ -58,13 +58,23 @@ int main(int argc, char **argv)
         close(fd);
         return 1;
     }
-    if(!dqbuf(fd, dma_bufs))
-    {
-        close(fd);
-        return 1;
+    FILE *fp = fopen("frame.mjpg", "ab");
+    if(!fp)    {
+        perror("fopen");
+        return 0;
     }
-    
+    while(g_running)
+    {
+        if(!dqbuf(fd, dma_bufs, fp))
+        {
+            ioctl(fd, VIDIOC_STREAMOFF, &type);
+            fclose(fp);
+            close(fd);
+            return 1;
+        }
+    }
     ioctl(fd, VIDIOC_STREAMOFF, &type);
+    fclose(fp);
     close(fd);
     return 0;
 }

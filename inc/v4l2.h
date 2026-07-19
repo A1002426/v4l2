@@ -23,8 +23,8 @@ int capability(int fd);
 int select_v4l2(int fd,capfmt *fmt_li, fs *fs_li, fi *fi_li);
 int set_fmt(int fd,capfmt *fmt_li, fs *fs_li);
 int set_streamparm(int fd, fi *fi_li);
-int dma_bufs_qbuf(int fd, DmaBuffer *dma_bufs);
-int dqbuf(int fd, DmaBuffer *dma_bufs);
+int qbuf(int fd, DmaBuffer *dma_bufs);
+int dqbuf(int fd, DmaBuffer *dma_bufs, FILE *fp);
 
 
 #endif

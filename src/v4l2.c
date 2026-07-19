@@ -140,7 +140,7 @@ int set_streamparm(int fd, fi *fi_li)
     }
     return 1;
 }
-int dma_bufs_qbuf(int fd, DmaBuffer *dma_bufs)
+int qbuf(int fd, DmaBuffer *dma_bufs)
 {
     struct v4l2_requestbuffers req={0};
     req.count = BUF_NUM;
@@ -193,7 +193,7 @@ int dma_bufs_qbuf(int fd, DmaBuffer *dma_bufs)
     close(ion_fd);
     return 1;
 }
-int dqbuf(int fd, DmaBuffer *dma_bufs)
+int dqbuf(int fd, DmaBuffer *dma_bufs, FILE *fp)
 {
     struct v4l2_buffer buf = {0};
     buf.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
@@ -203,14 +203,7 @@ int dqbuf(int fd, DmaBuffer *dma_bufs)
         perror("VIDIOC_DQBUF");
         return 0;
     }
-    FILE *fp = fopen("frame.yuv", "wb");
-    if(!fp)    {
-        perror("fopen");
-        return 0;
-    }
     fwrite(dma_bufs[buf.index].start, 1, buf.length, fp);
-    fclose(fp);
-    printf("Saved one frame (%u bytes) to frame.yuv\n", buf.length);
     ioctl(fd, VIDIOC_QBUF, &buf);
     return 1;
 }
